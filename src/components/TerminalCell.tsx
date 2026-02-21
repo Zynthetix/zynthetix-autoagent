@@ -106,7 +106,7 @@ export default function TerminalCell({ id, index, cwd, isActive, onClick }: Prop
         </div>
       )}
       {/* Terminal number badge — subtle, top-left corner */}
-      <div className={`absolute top-1.5 left-1.5 z-10 flex items-center justify-center
+      <div className={`absolute top-1.5 right-1.5 z-10 flex items-center justify-center
         w-5 h-5 rounded text-[10px] font-mono font-semibold leading-none select-none
         transition-opacity duration-300 pointer-events-none
         ${isActive ? "opacity-60" : "opacity-20 group-hover:opacity-40"}
