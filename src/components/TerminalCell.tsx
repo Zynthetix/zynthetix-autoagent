@@ -7,12 +7,13 @@ import "@xterm/xterm/css/xterm.css";
 
 interface Props {
   id: string;
+  index: number;
   cwd?: string;
   isActive: boolean;
   onClick: () => void;
 }
 
-export default function TerminalCell({ id, cwd, isActive, onClick }: Props) {
+export default function TerminalCell({ id, index, cwd, isActive, onClick }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const termRef = useRef<Terminal | null>(null);
   const fitRef = useRef<FitAddon | null>(null);
@@ -92,7 +93,7 @@ export default function TerminalCell({ id, cwd, isActive, onClick }: Props) {
   return (
     <div
       onClick={onClick}
-      className={`relative flex-1 min-w-0 min-h-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-150
+      className={`group relative flex-1 min-w-0 min-h-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-150
         ${isActive
           ? "ring-2 ring-violet-500 shadow-[0_0_20px_rgba(124,58,237,0.3)]"
           : "ring-1 ring-white/10 hover:ring-white/20"
@@ -104,6 +105,15 @@ export default function TerminalCell({ id, cwd, isActive, onClick }: Props) {
           Starting shell…
         </div>
       )}
+      {/* Terminal number badge — subtle, top-left corner */}
+      <div className={`absolute top-1.5 left-1.5 z-10 flex items-center justify-center
+        w-5 h-5 rounded text-[10px] font-mono font-semibold leading-none select-none
+        transition-opacity duration-300 pointer-events-none
+        ${isActive ? "opacity-60" : "opacity-20 group-hover:opacity-40"}
+        bg-black/50 text-white/90 backdrop-blur-sm`}
+      >
+        {index + 1}
+      </div>
       <div ref={containerRef} className="w-full h-full p-1" />
     </div>
   );

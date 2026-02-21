@@ -38,6 +38,7 @@ export default function TerminalGrid({ projectId, cwd, layout, closedIndices }: 
           <TerminalCell
             key={`${projectId}-${i}`}
             id={`${projectId}-${i}`}
+            index={i}
             cwd={cwd}
             isActive={activeCell === i}
             onClick={() => setActiveCell(i)}
