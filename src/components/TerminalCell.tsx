@@ -56,17 +56,13 @@ export default function TerminalCell({ id, index, cwd, isActive, onClick }: Prop
     const fit = new FitAddon();
     term.loadAddon(fit);
     term.open(containerRef.current);
-    fit.fit();
 
     termRef.current = term;
     fitRef.current = fit;
 
-    invoke("create_pty", {
-      id,
-      cols: term.cols,
-      rows: term.rows,
-      cwd: cwd ?? null,
-    }).then(() => setReady(true));
+    let ptyCreated = false;
+    let createTimer: ReturnType<typeof setTimeout> | null = null;
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
 
     const unlistenData = listen<string>(`pty_data_${id}`, (e) => {
       term.write(e.payload);
@@ -76,21 +72,38 @@ export default function TerminalCell({ id, index, cwd, isActive, onClick }: Prop
       invoke("write_pty", { id, data });
     });
 
-    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    // Delay PTY creation until after the flex/grid layout has fully settled.
+    // This ensures create_pty receives the correct terminal dimensions, so
+    // the shell process never needs a SIGWINCH-triggering resize on startup.
+    createTimer = setTimeout(() => {
+      fit.fit();
+      invoke("create_pty", {
+        id,
+        cols: term.cols,
+        rows: term.rows,
+        cwd: cwd ?? null,
+      }).then(() => {
+        ptyCreated = true;
+        setReady(true);
+      });
+    }, 200);
+
     const resizeObs = new ResizeObserver(() => {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         const prevCols = term.cols;
         const prevRows = term.rows;
         fit.fit();
-        if (term.cols !== prevCols || term.rows !== prevRows) {
+        // Only resize the PTY if it exists and the dimensions actually changed.
+        if (ptyCreated && (term.cols !== prevCols || term.rows !== prevRows)) {
           invoke("resize_pty", { id, cols: term.cols, rows: term.rows });
         }
-      }, 100);
+      }, 200);
     });
     resizeObs.observe(containerRef.current);
 
     return () => {
+      if (createTimer) clearTimeout(createTimer);
       if (resizeTimer) clearTimeout(resizeTimer);
       unlistenData.then((fn) => fn());
       resizeObs.disconnect();
