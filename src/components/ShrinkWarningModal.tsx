@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 interface Props {
   fromCount: number;
   toCount: number;
   toLabel: string;
-  onConfirm: () => void;
+  onConfirm: (indicesToClose: number[]) => void;
   onCancel: () => void;
 }
 
@@ -14,18 +16,31 @@ export default function ShrinkWarningModal({
   onCancel,
 }: Props) {
   const losing = fromCount - toCount;
+  // Start with the last `losing` terminals pre-selected for closing
+  const [toClose, setToClose] = useState<Set<number>>(
+    () => new Set(Array.from({ length: losing }, (_, i) => fromCount - losing + i))
+  );
+
+  function toggle(i: number) {
+    setToClose((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) {
+        next.delete(i);
+      } else if (next.size < losing) {
+        next.add(i);
+      }
+      return next;
+    });
+  }
+
+  const ready = toClose.size === losing;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onCancel}
-      />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onCancel} />
 
-      {/* Dialog */}
-      <div className="relative w-[340px] rounded-xl border border-white/10 bg-[#13131f]/90 backdrop-blur-xl shadow-2xl p-5 flex flex-col gap-4">
-        {/* Icon */}
+      <div className="relative w-[380px] rounded-xl border border-white/10 bg-[#13131f]/95 backdrop-blur-xl shadow-2xl p-5 flex flex-col gap-4">
+        {/* Header */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-amber-500/15 flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -34,18 +49,58 @@ export default function ShrinkWarningModal({
           </div>
           <div>
             <p className="text-white text-sm font-medium">Switch to {toLabel}?</p>
-            <p className="text-white/40 text-xs mt-0.5">This will close {losing} terminal{losing !== 1 ? "s" : ""}</p>
+            <p className="text-white/40 text-xs mt-0.5">
+              Select <span className="text-amber-400 font-medium">{losing}</span> terminal{losing !== 1 ? "s" : ""} to close
+            </p>
           </div>
         </div>
 
-        <p className="text-white/50 text-xs leading-relaxed">
-          You currently have <span className="text-white/70">{fromCount} terminals</span> open.
-          Switching to <span className="text-white/70">{toLabel}</span> will keep the first{" "}
-          <span className="text-white/70">{toCount}</span> and permanently close{" "}
-          <span className="text-amber-400">{losing}</span>. Any running processes in those terminals will be stopped.
+        {/* Terminal picker */}
+        <div className="grid grid-cols-4 gap-2">
+          {Array.from({ length: fromCount }, (_, i) => {
+            const closing = toClose.has(i);
+            const maxReached = toClose.size >= losing && !closing;
+            return (
+              <button
+                key={i}
+                onClick={() => toggle(i)}
+                disabled={maxReached}
+                className={`relative flex flex-col items-center justify-center gap-1.5 rounded-lg border p-2.5 transition-all
+                  ${closing
+                    ? "border-red-500/60 bg-red-500/15 text-red-400"
+                    : maxReached
+                      ? "border-white/5 bg-white/3 text-white/20 cursor-not-allowed"
+                      : "border-white/10 bg-white/5 text-white/50 hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white/80 cursor-pointer"
+                  }`}
+              >
+                {/* Mini terminal icon */}
+                <div className={`w-6 h-4 rounded border text-[6px] font-mono leading-none flex items-center justify-center
+                  ${closing ? "border-red-500/40 bg-red-900/20" : "border-white/15 bg-black/30"}`}>
+                  {closing ? "×" : ">_"}
+                </div>
+                <span className="text-[10px] font-medium">Term {i + 1}</span>
+                {closing && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Status hint */}
+        <p className="text-white/30 text-[11px] text-center">
+          {toClose.size < losing
+            ? <span className="text-amber-400/70">Select {losing - toClose.size} more to close</span>
+            : <span className="text-green-400/70">✓ {toCount} terminal{toCount !== 1 ? "s" : ""} will be kept, {losing} will be closed</span>
+          }
         </p>
 
-        <div className="flex gap-2 justify-end mt-1">
+        {/* Actions */}
+        <div className="flex gap-2 justify-end">
           <button
             onClick={onCancel}
             className="px-3 py-1.5 rounded-lg text-xs text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10 transition-all"
@@ -53,10 +108,15 @@ export default function ShrinkWarningModal({
             Cancel
           </button>
           <button
-            onClick={onConfirm}
-            className="px-3 py-1.5 rounded-lg text-xs text-white bg-amber-600/80 hover:bg-amber-500/80 transition-all font-medium"
+            onClick={() => ready && onConfirm([...toClose])}
+            disabled={!ready}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+              ${ready
+                ? "bg-amber-600/80 hover:bg-amber-500/80 text-white cursor-pointer"
+                : "bg-white/5 text-white/20 cursor-not-allowed"
+              }`}
           >
-            Close {losing} terminal{losing !== 1 ? "s" : ""} & switch
+            Close & switch
           </button>
         </div>
       </div>

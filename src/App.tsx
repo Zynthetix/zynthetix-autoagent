@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAppStore, getLayout, LayoutId } from "./store";
 import ProjectTabs from "./components/ProjectTabs";
 import TerminalGrid from "./components/TerminalGrid";
@@ -14,18 +14,27 @@ const WELCOME_PROJECT = {
 
 export default function App() {
   const { projects, activeProjectId, addProject } = useAppStore();
+  // Track closed terminal indices per project
+  const [closedMap, setClosedMap] = useState<Record<string, Set<number>>>({});
 
   useEffect(() => {
-    if (projects.length === 0) {
-      addProject(WELCOME_PROJECT);
-    }
+    if (projects.length === 0) addProject(WELCOME_PROJECT);
   }, []);
 
+  const handleCloseTerminals = useCallback((indices: number[]) => {
+    if (!activeProjectId) return;
+    setClosedMap((prev) => {
+      const existing = prev[activeProjectId] ?? new Set<number>();
+      const next = new Set([...existing, ...indices]);
+      return { ...prev, [activeProjectId]: next };
+    });
+  }, [activeProjectId]);
+
   const active = projects.find((p) => p.id === activeProjectId);
+  const closedIndices = (active && closedMap[active.id]) ?? new Set<number>();
 
   return (
     <div className="flex flex-col h-full bg-[#0d0d14] text-white select-none">
-      {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-900/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-indigo-900/10 rounded-full blur-3xl" />
@@ -39,6 +48,7 @@ export default function App() {
             projectId={active.id}
             cwd={active.path || undefined}
             layout={getLayout(active.layoutId)}
+            closedIndices={closedIndices}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-white/20 text-sm">
@@ -47,7 +57,7 @@ export default function App() {
         )}
       </div>
 
-      <StatusBar />
+      <StatusBar onCloseTerminals={handleCloseTerminals} />
     </div>
   );
 }

@@ -3,7 +3,11 @@ import { useAppStore, getLayout, LayoutId } from "../store";
 import GridSelector from "./GridSelector";
 import ShrinkWarningModal from "./ShrinkWarningModal";
 
-export default function StatusBar() {
+interface Props {
+  onCloseTerminals: (indices: number[]) => void;
+}
+
+export default function StatusBar({ onCloseTerminals }: Props) {
   const { projects, activeProjectId, setLayout } = useAppStore();
   const active = projects.find((p) => p.id === activeProjectId);
   const [pending, setPending] = useState<LayoutId | null>(null);
@@ -21,19 +25,17 @@ export default function StatusBar() {
   function handleLayoutChange(id: LayoutId) {
     const next = getLayout(id);
     if (next.count < currentLayout.count) {
-      // Fewer terminals — ask first
       setPending(id);
     } else {
-      // More or same — safe to switch immediately
       setLayout(active!.id, id);
     }
   }
 
-  function confirmSwitch() {
-    if (pending) {
-      setLayout(active!.id, pending);
-      setPending(null);
-    }
+  function confirmSwitch(indicesToClose: number[]) {
+    if (!pending) return;
+    onCloseTerminals(indicesToClose);
+    setLayout(active!.id, pending);
+    setPending(null);
   }
 
   return (
@@ -50,9 +52,7 @@ export default function StatusBar() {
 
       <div className="flex items-center justify-between px-4 h-8 border-t border-white/5 bg-black/20 backdrop-blur-sm flex-shrink-0 text-xs text-white/40">
         <div className="flex items-center gap-3">
-          <span className="font-mono truncate max-w-[300px]">
-            {active.path || "~"}
-          </span>
+          <span className="font-mono truncate max-w-[300px]">{active.path || "~"}</span>
           <span className="text-white/20">
             {currentLayout.label} · {currentLayout.count} terminal{currentLayout.count !== 1 ? "s" : ""}
           </span>
