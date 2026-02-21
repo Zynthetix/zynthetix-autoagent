@@ -58,16 +58,16 @@ Think of it as **iTerm2 meets project management, purpose-built for AI-assisted 
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                    Tauri Window                       │
+│                    Tauri Window                      │
 │  ┌─────────────────────────────────────────────────┐ │
 │  │  Project Tabs · [Project A] [Project B] [+]     │ │
 │  ├─────────────────────────────────────────────────┤ │
 │  │  ┌────────────────┬────────────────┐            │ │
 │  │  │  TerminalCell  │  TerminalCell  │            │ │
-│  │  │  xterm.js ←──Channel──→ PTY    │            │ │
+│  │  │  xterm.js ←──Channel──→ PTY     │            │ │
 │  │  ├────────────────┼────────────────┤            │ │
 │  │  │  TerminalCell  │  TerminalCell  │            │ │
-│  │  │  xterm.js ←──Channel──→ PTY    │            │ │
+│  │  │  xterm.js ←──Channel──→ PTY     │            │ │
 │  │  └────────────────┴────────────────┘            │ │
 │  ├─────────────────────────────────────────────────┤ │
 │  │  Status Bar · Layout picker                     │ │
