@@ -23,7 +23,7 @@ It is **not** an AI agent itself — it's the **cockpit** from which you manage 
 │  │  Terminal 3  │  Terminal 4  │                     │
 │  │  Copilot CLI │  GPT-Eng     │                     │
 │  └──────────────┴──────────────┘                     │
-│  Layout: 2×2 Grid · 4 terminals   [Layout picker]   │
+│  Layout: 2×2 Grid · 4 terminals   [Layout picker]    │
 └──────────────────────────────────────────────────────┘
 ```
 
