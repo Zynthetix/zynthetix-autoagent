@@ -55,10 +55,10 @@ export default function GridSelector({ value, onChange }: Props) {
             key={l.id}
             onClick={() => onChange(l.id)}
             title={l.label}
-            className={`relative w-7 h-7 p-1 rounded transition-all group
+            className={`relative w-7 h-7 p-1 rounded transition-colors group
               ${isActive
-                ? "bg-violet-600/40 text-violet-300 ring-1 ring-violet-500/60"
-                : "bg-white/5 text-white/25 hover:bg-white/10 hover:text-white/60"
+                ? "bg-[#1e1e22] text-white/80 ring-1 ring-white/16"
+                : "text-white/25 hover:bg-[#1a1a1d] hover:text-white/50"
               }`}
           >
             {PREVIEWS[l.id]}

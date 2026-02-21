@@ -14,15 +14,15 @@ export default function ProjectTabs() {
   }
 
   return (
-    <div className="flex items-center gap-1 px-3 h-10 border-b border-white/5 bg-black/20 backdrop-blur-sm flex-shrink-0">
+    <div className="flex items-center gap-1 px-3 h-10 border-b border-white/8 bg-[#131315] flex-shrink-0">
       {projects.map((p) => (
         <div
           key={p.id}
           onClick={() => setActiveProject(p.id)}
-          className={`group flex items-center gap-1.5 px-3 py-1 rounded-md text-sm cursor-pointer transition-all select-none
+          className={`group flex items-center gap-1.5 px-3 py-1 rounded-md text-sm cursor-pointer transition-colors select-none
             ${p.id === activeProjectId
-              ? "bg-violet-600/30 text-white border border-violet-500/40"
-              : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80 border border-transparent"
+              ? "bg-[#1e1e22] text-white border border-white/12"
+              : "text-white/40 hover:bg-[#1a1a1d] hover:text-white/70 border border-transparent"
             }`}
         >
           <span className="max-w-[120px] truncate">{p.name}</span>
@@ -36,7 +36,7 @@ export default function ProjectTabs() {
       ))}
       <button
         onClick={handleAddProject}
-        className="flex items-center justify-center w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 text-white/40 hover:text-white/80 transition-all text-lg leading-none"
+        className="flex items-center justify-center w-7 h-7 rounded-md hover:bg-[#1a1a1d] text-white/30 hover:text-white/70 transition-colors text-lg leading-none"
         title="Open project (⌘T)"
       >
         +

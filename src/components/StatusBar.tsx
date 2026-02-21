@@ -5,17 +5,18 @@ import ShrinkWarningModal from "./ShrinkWarningModal";
 
 interface Props {
   onCloseTerminals: (indices: number[]) => void;
+  onClearClosedTerminals: () => void;
 }
 
-export default function StatusBar({ onCloseTerminals }: Props) {
+export default function StatusBar({ onCloseTerminals, onClearClosedTerminals }: Props) {
   const { projects, activeProjectId, setLayout } = useAppStore();
   const active = projects.find((p) => p.id === activeProjectId);
   const [pending, setPending] = useState<LayoutId | null>(null);
 
   if (!active) {
     return (
-      <div className="flex items-center px-4 h-8 border-t border-white/5 bg-black/20 backdrop-blur-sm flex-shrink-0 text-xs text-white/20">
-        Zynthetix AutoAgent v0.1
+      <div className="flex items-center px-4 h-8 border-t border-white/8 bg-[#131315] flex-shrink-0 text-xs text-white/20">
+        Zynthetix AutoAgent v0.2
       </div>
     );
   }
@@ -27,6 +28,7 @@ export default function StatusBar({ onCloseTerminals }: Props) {
     if (next.count < currentLayout.count) {
       setPending(id);
     } else {
+      onClearClosedTerminals();
       setLayout(active!.id, id);
     }
   }
@@ -50,7 +52,7 @@ export default function StatusBar({ onCloseTerminals }: Props) {
         />
       )}
 
-      <div className="flex items-center justify-between px-4 h-8 border-t border-white/5 bg-black/20 backdrop-blur-sm flex-shrink-0 text-xs text-white/40">
+      <div className="flex items-center justify-between px-4 h-8 border-t border-white/8 bg-[#131315] flex-shrink-0 text-xs text-white/40">
         <div className="flex items-center gap-3">
           <span className="font-mono truncate max-w-[300px]">{active.path || "~"}</span>
           <span className="text-white/20">
@@ -59,7 +61,7 @@ export default function StatusBar({ onCloseTerminals }: Props) {
         </div>
         <div className="flex items-center gap-4">
           <GridSelector value={active.layoutId} onChange={handleLayoutChange} />
-          <span className="text-white/20">Zynthetix AutoAgent v0.1</span>
+          <span className="text-white/20">Zynthetix AutoAgent v0.2</span>
         </div>
       </div>
     </>

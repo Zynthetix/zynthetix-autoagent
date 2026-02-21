@@ -2,7 +2,7 @@
 
 > **The cockpit for AI-assisted development.** Manage multiple AI agent terminal sessions in parallel — without the chaos.
 
-![Version](https://img.shields.io/badge/version-0.1.1-violet) ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-black) ![License](https://img.shields.io/badge/license-MIT-green) ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20v2-24c8db)
+![Version](https://img.shields.io/badge/version-0.2.0-violet) ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-black) ![License](https://img.shields.io/badge/license-MIT-green) ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20v2-24c8db)
 
 ---
 
@@ -34,15 +34,17 @@ Think of it as **iTerm2 meets project management, purpose-built for AI-assisted 
 ## Download & Install (macOS)
 
 1. Go to [**Releases**](https://github.com/Zynthetix/zynthetix-autoagent/releases/latest)
-2. Download `Zynthetix.AutoAgent_0.1.0_aarch64.dmg` (Apple Silicon) from the release assets
+2. Download `Zynthetix.AutoAgent_0.2.0_aarch64.dmg` (Apple Silicon) from the release assets
 3. Open the `.dmg` → drag **Zynthetix AutoAgent.app** to `/Applications`
 
 > **First launch:** macOS will block an unsigned app. Fix: **Right-click the app → Open** → click Open. You only need to do this once.
 
 ---
 
-## Features (v0.1.0)
+## Features (v0.2.0)
 
+- **Zynthetix brand icon** — app now uses the official Zynthetix logo across all sizes
+- **Unified design system** — clean dark UI aligned with the Zynthetix design system: `#0f0f10` background, Inter typography, 8px grid, subtle 1px borders, no glassmorphism or glow effects
 - **Terminal grid layouts** — Solo, Side by Side, Stacked, 3 Columns, 2×2, 3×3, 4×4
 - **Visual layout picker** — mini grid previews in the status bar with tooltips
 - **Stable terminals** — switching layouts never kills running sessions; existing terminals stay intact
@@ -50,7 +52,7 @@ Think of it as **iTerm2 meets project management, purpose-built for AI-assisted 
 - **Terminal number badges** — subtle top-right badge on each cell so you always know which is which
 - **Project tabs** — open multiple codebases, switch instantly
 - **Real PTY sessions** — full xterm.js with 256-colour support, your default shell (`$SHELL`)
-- **Glassmorphism dark UI** — violet accents, SF Mono terminals, macOS-native feel
+- **Dark-only UI** — restrained charcoal surfaces, muted violet accent, SF Mono terminals
 
 ---
 
@@ -142,7 +144,7 @@ Built artefacts:
 ```
 src-tauri/target/aarch64-apple-darwin/release/bundle/
   ├── macos/Zynthetix AutoAgent.app
-  └── dmg/Zynthetix AutoAgent_0.1.0_aarch64.dmg
+  └── dmg/Zynthetix AutoAgent_0.2.0_aarch64.dmg
 ```
 
 ---
@@ -192,9 +194,10 @@ zynthetix-autoagent/
 ## Roadmap
 
 - **v0.1** — Terminal grid, named layouts, project tabs, PTY backend, IPC Channels
-- **v0.2** — AI config sidebar (CLAUDE.md, plan.md, agent.md viewer)
-- **v0.3** — Auto git worktree creation per terminal
-- **v0.4** — Session persistence, keyboard shortcuts
+- **v0.2** — Zynthetix brand icon, unified design system (clean dark UI, Inter font, no glassmorphism)
+- **v0.3** — AI config sidebar (CLAUDE.md, plan.md, agent.md viewer)
+- **v0.4** — Auto git worktree creation per terminal
+- **v0.5** — Session persistence, keyboard shortcuts
 - **v1.0** — Auto-updater, Homebrew cask, code signing
 
 See the full roadmap in the [PRD](https://github.com/Zynthetix/zynthetix-autoagent/wiki) (coming soon).

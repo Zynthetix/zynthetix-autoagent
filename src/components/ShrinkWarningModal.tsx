@@ -37,9 +37,9 @@ export default function ShrinkWarningModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onCancel} />
+      <div className="absolute inset-0 bg-black/70" onClick={onCancel} />
 
-      <div className="relative w-[380px] rounded-xl border border-white/10 bg-[#13131f]/95 backdrop-blur-xl shadow-2xl p-5 flex flex-col gap-4">
+      <div className="relative w-[380px] rounded-xl border border-white/10 bg-[#131315] shadow-xl p-5 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-amber-500/15 flex items-center justify-center flex-shrink-0">
@@ -65,12 +65,12 @@ export default function ShrinkWarningModal({
                 key={i}
                 onClick={() => toggle(i)}
                 disabled={maxReached}
-                className={`relative flex flex-col items-center justify-center gap-1.5 rounded-lg border p-2.5 transition-all
+                className={`relative flex flex-col items-center justify-center gap-1.5 rounded-lg border p-2.5 transition-colors
                   ${closing
-                    ? "border-red-500/60 bg-red-500/15 text-red-400"
+                    ? "border-red-500/50 bg-red-500/10 text-red-400"
                     : maxReached
-                      ? "border-white/5 bg-white/3 text-white/20 cursor-not-allowed"
-                      : "border-white/10 bg-white/5 text-white/50 hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white/80 cursor-pointer"
+                      ? "border-white/5 bg-[#0a0a0b] text-white/20 cursor-not-allowed"
+                      : "border-white/10 bg-[#0a0a0b] text-white/50 hover:border-white/20 hover:text-white/80 cursor-pointer"
                   }`}
               >
                 {/* Mini terminal icon */}
@@ -103,16 +103,16 @@ export default function ShrinkWarningModal({
         <div className="flex gap-2 justify-end">
           <button
             onClick={onCancel}
-            className="px-3 py-1.5 rounded-lg text-xs text-white/50 hover:text-white/80 bg-white/5 hover:bg-white/10 transition-all"
+            className="px-3 py-1.5 rounded-lg text-xs text-white/50 hover:text-white/80 hover:bg-[#1a1a1d] transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={() => ready && onConfirm([...toClose])}
             disabled={!ready}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
               ${ready
-                ? "bg-amber-600/80 hover:bg-amber-500/80 text-white cursor-pointer"
+                ? "bg-[#b45309] hover:bg-[#a34508] text-white cursor-pointer"
                 : "bg-white/5 text-white/20 cursor-not-allowed"
               }`}
           >

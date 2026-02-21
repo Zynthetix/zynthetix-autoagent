@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type LayoutId =
   | "solo"
@@ -47,34 +48,39 @@ interface AppState {
   setLayout: (projectId: string, layoutId: LayoutId) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  projects: [],
-  activeProjectId: null,
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      projects: [],
+      activeProjectId: null,
 
-  addProject: (project) =>
-    set((s) => ({
-      projects: [...s.projects, project],
-      activeProjectId: s.activeProjectId ?? project.id,
-    })),
+      addProject: (project) =>
+        set((s) => ({
+          projects: [...s.projects, project],
+          activeProjectId: s.activeProjectId ?? project.id,
+        })),
 
-  removeProject: (id) =>
-    set((s) => {
-      const remaining = s.projects.filter((p) => p.id !== id);
-      return {
-        projects: remaining,
-        activeProjectId:
-          s.activeProjectId === id
-            ? (remaining[0]?.id ?? null)
-            : s.activeProjectId,
-      };
+      removeProject: (id) =>
+        set((s) => {
+          const remaining = s.projects.filter((p) => p.id !== id);
+          return {
+            projects: remaining,
+            activeProjectId:
+              s.activeProjectId === id
+                ? (remaining[0]?.id ?? null)
+                : s.activeProjectId,
+          };
+        }),
+
+      setActiveProject: (id) => set({ activeProjectId: id }),
+
+      setLayout: (projectId, layoutId) =>
+        set((s) => ({
+          projects: s.projects.map((p) =>
+            p.id === projectId ? { ...p, layoutId } : p
+          ),
+        })),
     }),
-
-  setActiveProject: (id) => set({ activeProjectId: id }),
-
-  setLayout: (projectId, layoutId) =>
-    set((s) => ({
-      projects: s.projects.map((p) =>
-        p.id === projectId ? { ...p, layoutId } : p
-      ),
-    })),
-}));
+    { name: "zynthetix-autoagent-projects" }
+  )
+);
