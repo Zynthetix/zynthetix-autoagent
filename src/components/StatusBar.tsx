@@ -16,7 +16,7 @@ export default function StatusBar({ onCloseTerminals, onClearClosedTerminals }: 
   if (!active) {
     return (
       <div className="flex items-center px-4 h-8 border-t border-white/8 bg-[#131315] flex-shrink-0 text-xs text-white/20">
-        Zynthetix AutoAgent v0.2
+        Zynthetix AutoAgent v0.2.1
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function StatusBar({ onCloseTerminals, onClearClosedTerminals }: 
         </div>
         <div className="flex items-center gap-4">
           <GridSelector value={active.layoutId} onChange={handleLayoutChange} />
-          <span className="text-white/20">Zynthetix AutoAgent v0.2</span>
+          <span className="text-white/20">Zynthetix AutoAgent v0.2.1</span>
         </div>
       </div>
     </>
