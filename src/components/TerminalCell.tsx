@@ -76,13 +76,22 @@ export default function TerminalCell({ id, index, cwd, isActive, onClick }: Prop
       invoke("write_pty", { id, data });
     });
 
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
     const resizeObs = new ResizeObserver(() => {
-      fit.fit();
-      invoke("resize_pty", { id, cols: term.cols, rows: term.rows });
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const prevCols = term.cols;
+        const prevRows = term.rows;
+        fit.fit();
+        if (term.cols !== prevCols || term.rows !== prevRows) {
+          invoke("resize_pty", { id, cols: term.cols, rows: term.rows });
+        }
+      }, 100);
     });
     resizeObs.observe(containerRef.current);
 
     return () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
       unlistenData.then((fn) => fn());
       resizeObs.disconnect();
       invoke("close_pty", { id });
