@@ -2,7 +2,7 @@
 
 > **The cockpit for AI-assisted development.** Manage multiple AI agent terminal sessions in parallel — without the chaos.
 
-![Version](https://img.shields.io/badge/version-0.1.0-violet) ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-black) ![License](https://img.shields.io/badge/license-MIT-green) ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20v2-24c8db)
+![Version](https://img.shields.io/badge/version-0.1.1-violet) ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-black) ![License](https://img.shields.io/badge/license-MIT-green) ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%20v2-24c8db)
 
 ---
 
